@@ -16,8 +16,10 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path, include
 from blog.urls import router as blog_router
+from blog import views
 
 urlpatterns = [
     path('admin/', admin.site.urls),
 		path(r'api/', include(blog_router.urls)),
+		path(r'entrylist/', views.EntryList.as_view())
 ]
