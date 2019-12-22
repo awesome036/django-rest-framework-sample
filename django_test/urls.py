@@ -20,6 +20,5 @@ from blog import views
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-		path(r'api/', include(blog_router.urls)),
-		path(r'entrylist/', views.EntryList.as_view())
+		path(r'api/', include(blog_router.urls))
 ]

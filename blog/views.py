@@ -9,7 +9,7 @@ from rest_framework.decorators import action
 from rest_framework import status
 
 from .models import User, Entry
-from .serializer import UserSerializer, EntrySerializer
+from .serializer import UserSerializer, EntrySerializer, HistorySerializer # 追加しました
 
 # FilterSetを継承したフィルタセット(設定クラス)を作る
 class EntryFilter(filters.FilterSet):
@@ -38,17 +38,30 @@ class EntryViewSet(viewsets.ModelViewSet):
     serializer_class = EntrySerializer
     filter_class = EntryFilter
 
+    # 追加しました
     @action(detail=False, methods=['get'])
     def history(self, request, pk=None):
-        queryset_filter = EntryFilter(request.GET, queryset=Entry.objects.all())
-        serializer = EntrySerializer(queryset_filter.qs, many=True)
-        return Response({"messages": serializer.data}, status=status.HTTP_200_OK)
+        serializer = HistorySerializer(data=request.GET)
 
-class EntryList(APIView):
-    def get(self, request):
-        entry = Entry.objects.all()
-        serializer = EntrySerializer(entry, many=True)
-        return Response({"messages": serializer.data}, status=status.HTTP_200_OK)
+        if serializer.is_valid():
+          queryset_filter = EntryFilter(serializer.data, queryset=Entry.objects.all())
+          total_qs = queryset_filter.qs.count()
+          history = EntrySerializer(queryset_filter.qs, many=True)
 
-    def post(self):
-        pass
+          return Response({
+              "messages": history.data,
+              "total": total_qs
+            },
+            status=status.HTTP_200_OK
+          )
+
+        else:
+          return Response({
+              "error_code": 4001,
+              "error_message": "Invalid request",
+              "validation": [
+                serializer.errors
+              ] 
+            },
+            status=status.HTTP_400_BAD_REQUEST
+          )
