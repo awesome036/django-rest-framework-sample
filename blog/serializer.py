@@ -23,5 +23,8 @@ class HistorySerializer(serializers.ModelSerializer):
         model = Entry
         fields = ('author', 'status')
     
-    author_array_regex = RegexValidator(regex=r'^\[([0-9],?)+\]$', message = ("Sender id must be entered in the format: '[1,2,3]'."))
+    author_array_regex = RegexValidator(
+      regex=r'^\[([0-9],?)+\]$',
+      message = ("Sender id must be entered in the format: '[1,2,3]'.")
+    )
     author = serializers.CharField(validators=[author_array_regex])

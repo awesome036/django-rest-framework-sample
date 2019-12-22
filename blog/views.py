@@ -48,20 +48,20 @@ class EntryViewSet(viewsets.ModelViewSet):
           total_qs = queryset_filter.qs.count()
           history = EntrySerializer(queryset_filter.qs, many=True)
 
-          return Response({
-              "messages": history.data,
+          data = {
+            "messages": history.data,
               "total": total_qs
-            },
-            status=status.HTTP_200_OK
-          )
+          }
+
+          return Response(data, status=status.HTTP_200_OK)
 
         else:
-          return Response({
+          data = {
               "error_code": 4001,
               "error_message": "Invalid request",
               "validation": [
                 serializer.errors
               ] 
-            },
-            status=status.HTTP_400_BAD_REQUEST
-          )
+          }
+
+          return Response(data, status=status.HTTP_400_BAD_REQUEST)
