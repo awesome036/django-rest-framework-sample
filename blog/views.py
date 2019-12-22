@@ -50,7 +50,7 @@ class EntryViewSet(viewsets.ModelViewSet):
 
           data = {
             "messages": history.data,
-              "total": total_qs
+            "total": total_qs
           }
 
           return Response(data, status=status.HTTP_200_OK)
