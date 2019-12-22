@@ -25,7 +25,7 @@ class EntryFilter(filters.FilterSet):
     # フィルタの定義
     author = filters.CharFilter(method='get_authors')
     title = filters.CharFilter(lookup_expr='contains')
-    status = filters.NumberFilter(lookup_expr='exact')
+    status = filters.CharFilter(lookup_expr='exact') # ENUM型はcharでfilterする
 
 
 class UserViewSet(viewsets.ModelViewSet):
